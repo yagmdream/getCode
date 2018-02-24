@@ -1,0 +1,97 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+	<style>
+		.code-btn {
+			border: 1px solid #eee;
+		
+		}
+	</style>
+</head>
+<body>
+
+ <div id="from-code"> 
+	 <div class="edit-input">
+		<input v-model="form.phone" type="text" placeholder="手机号"/>
+	 </div>
+	<div class="edit-input">
+		<input v-model="form.code" type="text" placeholder="验证码">
+		<div @click="getCode" class="code-btn">{{ form.codeText }}</div>
+	</div>
+ </div> 
+
+</body>
+<script src="./vue.js"></script>
+<script>
+
+	var fromCode = new Vue({
+		el:"#from-code",
+		data:{
+			form: {
+				phone: '',
+				code: '',
+				codeText: '获取验证码',
+				countdown: 60,   
+			},
+		},
+		methods:{
+			getCode(){
+				let self = this;				
+				let telReg = /^1(3|4|5|6|7|8|9)\d{9}$/;   //验证手机号
+				let phone = self.form.phone;
+				if('' == phone) { alert('请输入手机号码'); return ;}
+				if(!telReg.test(phone)) { alert('请输入正确手机号'); return ;}
+				let time = self.form.countdown;
+				if(self.form.countdown != 60){ alert('验证码已发送,请稍等...'); return ;}
+				
+				//请求成功回调，倒计时
+				(function settime(){
+					if(time == 0 || self.form.code != ''){
+						self.form.codeText = '获取验证码';
+						self.form.countdown = 60; 
+						return ;
+					}else {
+						self.form.codeText = time + ' 秒';
+						self.form.countdown = time;
+						time-- ;
+						setTimeout(function(){
+							settime();
+						},1000);
+					}
+				})()
+		
+				//请求失败回调
+			}
+		}
+	})
+</script>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
